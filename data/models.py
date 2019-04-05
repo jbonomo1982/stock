@@ -95,7 +95,7 @@ class Entrada(models.Model):
 
 class Consumo_sector(models.Model):
     ingresado = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    fecha = fecha_ingreso = models.DateTimeField(default= timezone.now)
+    fecha = models.DateTimeField(default= timezone.now)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     observaciones = models.CharField(max_length = 200)
     
@@ -112,8 +112,9 @@ class Salida(models.Model):
         ('PRES', 'Prestamo'),
         ('DEVO','Dev Prestamo')
     )
+    ingresado = models.ForeignKey('auth.User', on_delete=models.CASCADE,default=None)
     tipo = models.CharField(max_length = 4,choices=TIPO,default='PROV')
-    consumo_sector = models.ForeignKey(Consumo_sector, on_delete=models.CASCADE, default=None, help_text="Dejar vacio si se trata de un préstamo.")
+    consumo_sector= models.ForeignKey(Consumo_sector, on_delete=models.CASCADE, default=None, help_text="Dejar vacio si se trata de un préstamo.")
     articulo = models.ForeignKey(Lote_producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=0)
 
@@ -133,9 +134,10 @@ class Laboratorio(models.Model):
 class Prestamo_s(models.Model):
     #Para contabilizar los prestamos que hacemos o que devolvemos
     TIPO =(
-        ('DEVS', 'Devolvemos')
-        ('PRES', 'Prestamos'),
+        ('DEVS', 'Devolvemos'),
+        ('PRES', 'Prestamos')
     )
+    ingresado = models.ForeignKey('auth.User', on_delete=models.CASCADE,default=None)
     tipo = models.CharField(max_length = 4,choices=TIPO)
     fecha_prestamo = models.DateField(auto_now=False)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
@@ -150,9 +152,10 @@ class Prestamo_s(models.Model):
 class Prestamo_e(models.Model):
     #Para contabilizar los prestamos que nos hacen o devuelven.
     TIPO =(
-        ('DEVN', 'Devuelven')
-        ('PREN', 'Prestan'),
+        ('DEVN', 'Devuelven'),
+        ('PREN', 'Prestan')
     )
+    ingresado = models.ForeignKey('auth.User', on_delete=models.CASCADE, default=None)
     tipo = models.CharField(max_length = 4,choices=TIPO)
     fecha_prestamo = models.DateField(auto_now=False)
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
